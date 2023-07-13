@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.pedrodantas1.gamelist.dto.GameDTO;
 import com.pedrodantas1.gamelist.dto.GameMinDTO;
 import com.pedrodantas1.gamelist.entities.Game;
+import com.pedrodantas1.gamelist.projections.GameMinProjection;
 import com.pedrodantas1.gamelist.repositories.GameRepository;
 
 @Service
@@ -27,5 +28,11 @@ public class GameService {
 	public GameDTO findById(Long id) {
 		Game result = gameRepository.findById(id).get();
 		return new GameDTO(result);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<GameMinDTO> findByList(Long listId) {
+		List<GameMinProjection> result = gameRepository.searchByList(listId);
+		return result.stream().map(x -> new GameMinDTO(x)).toList();
 	}
 }
